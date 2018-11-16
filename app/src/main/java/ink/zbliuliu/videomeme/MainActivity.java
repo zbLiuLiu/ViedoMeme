@@ -50,6 +50,7 @@ public class MainActivity extends AppCompatActivity {
     private SurfaceHolder surfaceHolder;
     private IjkMediaPlayer mediaPlayer;
     private SeekBar seekBar;
+    private Toolbar toolbar;
     private Timer timer;
     private TimerTask timerTask;
     private String videoPath;
@@ -90,7 +91,7 @@ public class MainActivity extends AppCompatActivity {
             checkPermission();
         }
 
-        final Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         BottomNavigationView bottomNavigationView = (BottomNavigationView)findViewById(R.id.bottomNavigationView);
         bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
@@ -102,7 +103,7 @@ public class MainActivity extends AppCompatActivity {
                         openNewVideo();
                         break;
                     case R.id.play:
-                        play();
+                        if(mediaPlayer!=null) play();
                         break;
                     case R.id.screenscan:
                         break;
@@ -188,13 +189,21 @@ public class MainActivity extends AppCompatActivity {
             videoPath = cursor.getString(columnIndex);
             cursor.close();
             Toast.makeText(MainActivity.this,videoPath,Toast.LENGTH_LONG).show();
-        }else return;
+        }else {
+            toolbar.setTitle("23333");
+            toolbar.setSubtitle("");
+            return;
+        }
         //Toast.makeText(this, "111", Toast.LENGTH_LONG).show();
         File file = new File(videoPath.trim());
         if (!file.exists()) {
             Toast.makeText(this, "视频文件路径错误", Toast.LENGTH_LONG).show();
+            toolbar.setTitle("23333");
+            toolbar.setSubtitle("");
             return;
         }
+        toolbar.setTitle(file.getName());
+        toolbar.setSubtitle(file.getPath());
         try{
             surfaceView.setLayoutParams(new ConstraintLayout.LayoutParams(WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT));
             mediaPlayer = new IjkMediaPlayer();
